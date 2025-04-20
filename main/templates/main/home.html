@@ -6,4 +6,9 @@ home
 
 {%block content%}
 <h1>Home Page</h1>
+
+<form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Log out</button>
+</form>
 {% endblock %}
