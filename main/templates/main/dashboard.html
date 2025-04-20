@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 170px;
+            background-color: white;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #e0e0e0;
+            transition: width 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .sidebar-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 10px;
+        }
+        .sidebar-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+        }
+        .active-button {
+            background-color: #0d47a1;
+        }
+        .logout-button {
+            background-color: #3f51b5;
+            margin-top: auto;
+            width: calc(100% - 20px);
+            margin-left: 10px;
+            margin-bottom: 10px;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            color: #2196F3;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .back-icon, .notification-icon, .profile-icon {
+            color: #2196F3;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .cards-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            width: 22%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .card h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+            font-weight: normal;
+        }
+        .card p {
+            margin: 10px 0 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .table-container {
+            margin-top: 40px;
+        }
+        .table-title {
+            text-align: center;
+            color: #999;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+        .table-header {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 0;
+        }
+        .table-header-cell {
+            flex: 1;
+            text-align: center;
+            color: #673ab7;
+            font-weight: bold;
+            padding: 5px;
+            cursor: pointer;
+        }
+        .sort-icon {
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        .table-row {
+            display: flex;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 10px 0;
+        }
+        .table-cell {
+            flex: 1;
+            text-align: center;
+            padding: 5px;
+        }
+        .eye-icon {
+            color: #2196F3;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-buttons">
+                <button class="sidebar-button active-button">Dashboard</button>
+                <a href="{% url 'project_health' %}" style="text-decoration: none; width: 100%;">
+                    <button class="sidebar-button">Project Health</button>
+                </a>
+                <a href="{% url 'settings' %}" style="text-decoration: none; width: 100%;">
+                    <button class="sidebar-button">Settings</button>
+                </a>
+                <button class="sidebar-button">Save</button>
+                <a href="{% url 'chat' %}" style="text-decoration: none; width: 100%;">
+                    <button class="sidebar-button">Chat</button>
+                </a>
+            </div>
+            <a href="{% url 'logout' %}" style="text-decoration: none; margin-top: auto;">
+                <button class="sidebar-button logout-button">Log Out</button>
+            </a>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <span class="menu-icon" id="toggle-sidebar">≡</span>
+                </div>
+                <div class="header-right">
+                    <span class="notification-icon">🔔</span>
+                    <span class="profile-icon">👤</span>
+                </div>
+            </div>
+            
+            <div class="cards-container">
+                <div class="card">
+                    <h3>Total Project</h3>
+                    <p>20</p>
+                </div>
+                <div class="card">
+                    <h3>Active Projects</h3>
+                    <p>1</p>
+                </div>
+                <div class="card">
+                    <h3>Team Member</h3>
+                    <p>15</p>
+                </div>
+                <div class="card">
+                    <h3>Completed Project</h3>
+                    <p>19</p>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <h2 class="table-title">Table</h2>
+                <div class="table-header">
+                    <div class="table-header-cell">Projects <span class="sort-icon">↓</span></div>
+                    <div class="table-header-cell">Team_id <span class="sort-icon">↓</span></div>
+                    <div class="table-header-cell">Department_id <span class="sort-icon">↓</span></div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 1</div>
+                    <div class="table-cell">143</div>
+                    <div class="table-cell">244</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 2</div>
+                    <div class="table-cell">675</div>
+                    <div class="table-cell">424</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 3</div>
+                    <div class="table-cell">897</div>
+                    <div class="table-cell">373</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 4</div>
+                    <div class="table-cell">465</div>
+                    <div class="table-cell">134</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 5</div>
+                    <div class="table-cell">675</div>
+                    <div class="table-cell">424</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 6</div>
+                    <div class="table-cell">975</div>
+                    <div class="table-cell">143</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 7</div>
+                    <div class="table-cell">435</div>
+                    <div class="table-cell">258</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 8</div>
+                    <div class="table-cell">324</div>
+                    <div class="table-cell">574</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 9</div>
+                    <div class="table-cell">564</div>
+                    <div class="table-cell">546</div>
+                </div>
+                
+                <div class="table-row">
+                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 10</div>
+                    <div class="table-cell">685</div>
+                    <div class="table-cell">543</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('toggle-sidebar');
+            const sidebar = document.getElementById('sidebar');
+            
+            toggleButton.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+            });
+        });
+    </script>
+</body>
+</html> 

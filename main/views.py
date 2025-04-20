@@ -43,5 +43,25 @@ def create(response):
         form = CreateNewList()
     return render(response, "main/create.html", {"form": form})
 
+# Add dashboard view
+def dashboard(request):
+    return render(request, "main/dashboard.html", {})
+
+# Add chat view
+def chat(request):
+    return render(request, "main/chat.html", {})
+
+# Add settings view
+def settings(request):
+    return render(request, "main/settings.html", {})
+
+# Add project health view
+def project_health(request):
+    return render(request, "main/project_health.html", {})
+
+# Add admin dashboard view
+def admin_dashboard(request):
+    return render(request, "main/admin_dashboard.html", {})
+
 
 

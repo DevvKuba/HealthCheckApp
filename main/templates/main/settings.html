@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 170px;
+            background-color: white;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #e0e0e0;
+            transition: width 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .sidebar-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 10px;
+        }
+        .sidebar-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+        }
+        .active-button {
+            background-color: #0d47a1;
+        }
+        .logout-button {
+            background-color: #3f51b5;
+            margin-top: auto;
+            width: calc(100% - 20px);
+            margin-left: 10px;
+            margin-bottom: 10px;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            color: #2196F3;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .back-icon, .notification-icon, .profile-icon {
+            color: #2196F3;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .settings-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .settings-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .btn-save {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .theme-section {
+            margin-top: 40px;
+        }
+        .theme-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .theme-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .theme-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-buttons">
+                <a href="{% url 'dashboard' %}" style="text-decoration: none; width: 100%;">
+                    <button class="sidebar-button">Dashboard</button>
+                </a>
+                <a href="{% url 'project_health' %}" style="text-decoration: none; width: 100%;">
+                    <button class="sidebar-button">Project Health</button>
+                </a>
+                <button class="sidebar-button active-button">Settings</button>
+                <button class="sidebar-button">Save</button>
+                <a href="{% url 'chat' %}" style="text-decoration: none; width: 100%;">
+                    <button class="sidebar-button">Chat</button>
+                </a>
+            </div>
+            <a href="{% url 'logout' %}" style="text-decoration: none; margin-top: auto;">
+                <button class="sidebar-button logout-button">Log Out</button>
+            </a>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <span class="menu-icon" id="toggle-sidebar">≡</span>
+                </div>
+                <div class="header-right">
+                    <span class="back-icon">←</span>
+                    <span class="notification-icon">🔔</span>
+                    <span class="profile-icon">👤</span>
+                </div>
+            </div>
+            
+            <div class="settings-container">
+                <h2 class="settings-title">Settings</h2>
+                
+                <form>
+                    <div class="form-group">
+                        <label for="firstname">First Name</label>
+                        <input type="text" id="firstname" class="form-control" placeholder="eg. First Name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastname">Last Name</label>
+                        <input type="text" id="lastname" class="form-control" placeholder="eg. Last Name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" placeholder="eg. Email@gmail.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-control" placeholder="eg. Password">
+                    </div>
+                    
+                    <button type="button" class="btn-save">Save</button>
+                </form>
+                
+                <div class="theme-section">
+                    <h3 class="theme-title">Theme</h3>
+                    <div class="theme-buttons">
+                        <button class="theme-button">Light Mode</button>
+                        <button class="theme-button">Dark Mode</button>
+                        <button class="theme-button">System Light</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('toggle-sidebar');
+            const sidebar = document.getElementById('sidebar');
+            
+            toggleButton.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+            });
+        });
+    </script>
+</body>
+</html> 

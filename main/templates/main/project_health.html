@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Health</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 170px;
+            background-color: white;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #e0e0e0;
+            transition: width 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .sidebar-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 10px;
+        }
+        .sidebar-button {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+        }
+        .active-button {
+            background-color: #0d47a1;
+        }
+        .logout-button {
+            background-color: #3f51b5;
+            margin-top: auto;
+            width: calc(100% - 20px);
+            margin-left: 10px;
+            margin-bottom: 10px;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            color: #2196F3;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .back-icon, .notification-icon, .profile-icon {
+            color: #2196F3;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .health-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+        .project-form {
+            margin-bottom: 40px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .status-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .status-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .btn-save {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 80px;
+        }
+        .status-text {
+            font-size: 16px;
+        }
+        .comment-section {
+            margin-top: 40px;
+        }
+        .comment-header {
+            background-color: #4a148c;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .comment-content {
+            margin-top: 20px;
+        }
+        .voting-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .project-select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 180px;
+        }
+        .voting-info {
+            flex: 1;
+            padding-left: 20px;
+        }
+        .commenter {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .justification {
+            color: #555;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-buttons">
+                <a href="{% url 'dashboard' %}" style="text-decoration: none; width: 100%;">
+                    <button class="sidebar-button">Dashboard</button>
+                </a>
+                <button class="sidebar-button active-button">Project Health</button>
+                <a href="{% url 'settings' %}" style="text-decoration: none; width: 100%;">
+                    <button class="sidebar-button">Settings</button>
+                </a>
+                <button class="sidebar-button">Save</button>
+                <a href="{% url 'chat' %}" style="text-decoration: none; width: 100%;">
+                    <button class="sidebar-button">Chat</button>
+                </a>
+            </div>
+            <a href="{% url 'logout' %}" style="text-decoration: none; margin-top: auto;">
+                <button class="sidebar-button logout-button">Log Out</button>
+            </a>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <span class="menu-icon" id="toggle-sidebar">≡</span>
+                    <h1>Project Health</h1>
+                </div>
+                <div class="header-right">
+                    <span class="notification-icon">🔔</span>
+                    <span class="profile-icon">👤</span>
+                </div>
+            </div>
+            
+            <div class="health-container">
+                <h2 class="section-title">Current Voting</h2>
+                
+                <div class="project-form">
+                    <div class="form-group">
+                        <label for="project-name">Project Name</label>
+                        <input type="text" id="project-name" class="form-control" placeholder="eg. First Name">
+                    </div>
+                    
+                    <div class="status-options">
+                        <div class="status-row">
+                            <button class="btn-save">Save</button>
+                            <span class="status-text">Project is in good health</span>
+                        </div>
+                        
+                        <div class="status-row">
+                            <button class="btn-save">Save</button>
+                            <span class="status-text">Project needs more work</span>
+                        </div>
+                        
+                        <div class="status-row">
+                            <button class="btn-save">Save</button>
+                            <span class="status-text">Project is not in good health</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comment-section">
+                    <div class="comment-header">
+                        <span>Voting Comment</span>
+                        <span>−</span>
+                    </div>
+                    
+                    <div class="comment-content">
+                        <div class="voting-row">
+                            <select class="project-select">
+                                <option>Project 1</option>
+                                <option>Project 2</option>
+                                <option>Project 3</option>
+                            </select>
+                            
+                            <div class="voting-info">
+                                Alpha Project - 2 Votes (Majority)
+                            </div>
+                            
+                            <button class="btn-save">Save</button>
+                        </div>
+                        
+                        <div class="commenter">John Doe</div>
+                        
+                        <div class="justification">
+                            (Justification) Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna et aliqua. Ut enim ad minim veniarjam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute ati irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('toggle-sidebar');
+            const sidebar = document.getElementById('sidebar');
+            
+            toggleButton.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+            });
+        });
+    </script>
+</body>
+</html> 
