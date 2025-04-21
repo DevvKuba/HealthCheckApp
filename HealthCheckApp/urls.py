@@ -27,9 +27,5 @@ urlpatterns = [
     path('logout/', v.logout_view, name='logout'),
     path('', RedirectView.as_view(url='login/')),
     path('', include("main.urls")),
-<<<<<<< Updated upstream
     path('', include("django.contrib.auth.urls")),
-
-=======
->>>>>>> Stashed changes
 ]

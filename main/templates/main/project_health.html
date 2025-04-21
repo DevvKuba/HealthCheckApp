@@ -16,13 +16,16 @@
             height: 100vh;
         }
         .sidebar {
-            width: 170px;
-            background-color: white;
+            width: 240px;
+            background-color: #1e293b;
             padding: 20px 0;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid #e0e0e0;
-            transition: width 0.3s ease;
+            border-right: 1px solid #2c3e50;
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            position: relative;
+            overflow-y: auto;
         }
         .sidebar.collapsed {
             width: 0;
@@ -32,29 +35,94 @@
         .sidebar-buttons {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            padding: 0 10px;
+            gap: 12px;
+            padding: 15px;
+            margin-top: 20px;
         }
         .sidebar-button {
-            background-color: #2196F3;
-            color: white;
+            background-color: transparent;
+            color: #e2e8f0;
             border: none;
-            border-radius: 5px;
-            padding: 10px;
-            text-align: center;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: left;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
             width: 100%;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            line-height: 1.2;
+        }
+        .sidebar-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(3px);
+        }
+        .sidebar-button::before {
+            content: "";
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.8;
+        }
+        .sidebar-button:nth-child(1)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(2)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(3)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'%3E%3C/path%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(4)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(5)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'%3E%3C/path%3E%3C/svg%3E");
         }
         .active-button {
-            background-color: #0d47a1;
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .active-button::before {
+            opacity: 1;
         }
         .logout-button {
-            background-color: #3f51b5;
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #fecaca;
             margin-top: auto;
-            width: calc(100% - 20px);
-            margin-left: 10px;
+            width: calc(100% - 30px);
+            margin-left: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            padding: 12px 15px;
+            transition: all 0.2s ease;
+        }
+        .logout-button:hover {
+            background-color: rgba(239, 68, 68, 0.3);
+        }
+        .logout-button::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fecaca'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .app-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 20px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             margin-bottom: 10px;
+        }
+        .app-logo span {
+            color: #3b82f6;
         }
         .main-content {
             flex: 1;
@@ -93,12 +161,30 @@
             padding: 20px;
         }
         .section-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             margin-bottom: 25px;
+            color: #1e293b;
+            position: relative;
+            padding-left: 16px;
+        }
+        .section-title::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 24px;
+            width: 4px;
+            background-color: #3b82f6;
+            border-radius: 4px;
         }
         .project-form {
             margin-bottom: 40px;
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .form-group {
             margin-bottom: 20px;
@@ -107,14 +193,24 @@
             display: block;
             margin-bottom: 10px;
             font-weight: 500;
+            color: #4b5563;
         }
         .form-control {
             width: 100%;
-            max-width: 300px;
-            padding: 10px;
+            max-width: 100%;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
+            font-family: inherit;
+            font-size: 15px;
+            transition: border 0.3s;
+            resize: vertical;
+        }
+        .form-control:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
         .status-options {
             display: flex;
@@ -140,21 +236,110 @@
         .status-text {
             font-size: 16px;
         }
+        
+        /* Slider styles */
+        .slider-container {
+            margin: 30px 0;
+            width: 100%;
+        }
+        .health-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #ef4444, #f59e0b, #10b981);
+            outline: none;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .health-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .health-slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .health-value {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #3b82f6;
+        }
+        .health-status {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+        .project-select {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        .submit-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 14px 28px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+        .submit-btn:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
         .comment-section {
             margin-top: 40px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
         .comment-header {
             background-color: #4a148c;
             color: white;
-            padding: 15px;
-            border-radius: 4px;
+            padding: 18px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s;
+        }
+        .comment-header:hover {
+            background-color: #5c1b9e;
         }
         .comment-content {
-            margin-top: 20px;
+            padding: 20px;
         }
         .voting-row {
             display: flex;
@@ -162,30 +347,188 @@
             gap: 15px;
             margin-bottom: 25px;
         }
-        .project-select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 180px;
-        }
         .voting-info {
             flex: 1;
-            padding-left: 20px;
+            background-color: #f0f9ff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border-left: 4px solid #3b82f6;
+            font-weight: 500;
         }
         .commenter {
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .commenter::before {
+            content: "";
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234a148c'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
         }
         .justification {
             color: #555;
             line-height: 1.5;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        .username-display {
+            font-size: 14px;
+            color: #333;
+            margin-left: 10px;
+        }
+        
+        /* Message alert styles */
+        .messages-container {
+            padding: 0 20px;
+            margin-top: 20px;
+        }
+        .message-alert {
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            position: relative;
+        }
+        .message-alert.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+        .message-alert.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+        .message-alert.info {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+            border-left: 4px solid #0d47a1;
+        }
+        .close-message {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: inherit;
+        }
+        
+        /* Manager improvement section styles */
+        .improvement-section {
+            margin-top: 40px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .improvement-header {
+            background-color: #1e40af;
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s;
+        }
+        .improvement-header:hover {
+            background-color: #1e3a8a;
+        }
+        .improvement-content {
+            padding: 20px;
+        }
+        .improvement-form {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 25px;
+        }
+        .improvement-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .improvement-item {
+            background-color: #f8fafc;
+            border-radius: 6px;
+            padding: 15px;
+            position: relative;
+            border-left: 4px solid #3b82f6;
+        }
+        .improvement-item.implemented {
+            border-left-color: #10b981;
+            background-color: #f0fdf4;
+        }
+        .improvement-author {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e293b;
+            display: flex;
+            justify-content: space-between;
+        }
+        .improvement-date {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: normal;
+        }
+        .improvement-badge {
+            display: inline-block;
+            background-color: #10b981;
+            color: white;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+        .improvement-text {
+            color: #334155;
+            line-height: 1.5;
+        }
+        .toggle-implemented {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: 2px solid #3b82f6;
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .toggle-implemented.checked {
+            background-color: #10b981;
+            border-color: #10b981;
+        }
+        .toggle-implemented.checked:after {
+            content: "✓";
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="sidebar" id="sidebar">
+            <div class="app-logo">
+                Health<span>Check</span>
+            </div>
             <div class="sidebar-buttons">
                 <a href="{% url 'dashboard' %}" style="text-decoration: none; width: 100%;">
                     <button class="sidebar-button">Dashboard</button>
@@ -199,7 +542,7 @@
                     <button class="sidebar-button">Chat</button>
                 </a>
             </div>
-            <a href="{% url 'logout' %}" style="text-decoration: none; margin-top: auto;">
+            <a href="{% url 'logout' %}" style="text-decoration: none; margin-top: auto; display: block;" id="logout-link">
                 <button class="sidebar-button logout-button">Log Out</button>
             </a>
         </div>
@@ -212,34 +555,65 @@
                 <div class="header-right">
                     <span class="notification-icon">🔔</span>
                     <span class="profile-icon">👤</span>
+                    <span class="username-display">Welcome, 
+                        {% if user.first_name %}
+                            {{ user.first_name }} {{ user.last_name }}
+                        {% else %}
+                            {{ username }}
+                        {% endif %}
+                    </span>
                 </div>
             </div>
+            
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="message-alert {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                    <button class="close-message">&times;</button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
             
             <div class="health-container">
                 <h2 class="section-title">Current Voting</h2>
                 
                 <div class="project-form">
-                    <div class="form-group">
-                        <label for="project-name">Project Name</label>
-                        <input type="text" id="project-name" class="form-control" placeholder="eg. First Name">
-                    </div>
-                    
-                    <div class="status-options">
-                        <div class="status-row">
-                            <button class="btn-save">Save</button>
-                            <span class="status-text">Project is in good health</span>
+                    <form method="post" action="{% url 'save_project_health' %}" id="health-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="project-select">Select Project</label>
+                            <select id="project-select" name="project_id" class="project-select" required>
+                                <option value="">-- Select a project --</option>
+                                {% for project in projects %}
+                                <option value="{{ project.id }}">{{ project.name }}</option>
+                                {% empty %}
+                                <option value="" disabled>No projects available</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         
-                        <div class="status-row">
-                            <button class="btn-save">Save</button>
-                            <span class="status-text">Project needs more work</span>
+                        <div class="slider-container">
+                            <div class="health-value">Health: <span id="health-percentage">50</span>%</div>
+                            <div class="health-status" id="health-status-text">Project needs some work</div>
+                            
+                            <div class="slider-legend" style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px; color: #6b7280;">
+                                <span>Poor Health</span>
+                                <span>Needs Work</span>
+                                <span>Good Health</span>
+                            </div>
+                            
+                            <input type="range" min="0" max="100" value="50" class="health-slider" id="health-slider" name="health_percentage">
+                            
+                            <div class="form-group">
+                                <label for="health-comment">Comment</label>
+                                <textarea id="health-comment" name="comment" class="form-control" rows="3" placeholder="Add your justification for this health assessment..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn">Save Health Status</button>
                         </div>
-                        
-                        <div class="status-row">
-                            <button class="btn-save">Save</button>
-                            <span class="status-text">Project is not in good health</span>
-                        </div>
-                    </div>
+                    </form>
                 </div>
                 
                 <div class="comment-section">
@@ -250,17 +624,15 @@
                     
                     <div class="comment-content">
                         <div class="voting-row">
-                            <select class="project-select">
-                                <option>Project 1</option>
-                                <option>Project 2</option>
-                                <option>Project 3</option>
+                            <select id="voting-project-select" class="project-select">
+                                <option value="">Project 1</option>
+                                <option value="">Project 2</option>
+                                <option value="">Project 3</option>
                             </select>
                             
                             <div class="voting-info">
                                 Alpha Project - 2 Votes (Majority)
                             </div>
-                            
-                            <button class="btn-save">Save</button>
                         </div>
                         
                         <div class="commenter">John Doe</div>
@@ -270,6 +642,63 @@
                         </div>
                     </div>
                 </div>
+                
+                {% if is_manager %}
+                <div class="improvement-section">
+                    <div class="improvement-header">
+                        <span>Manager Improvement Suggestions</span>
+                        <span>−</span>
+                    </div>
+                    
+                    <div class="improvement-content">
+                        <div class="improvement-form">
+                            <form method="post" action="{% url 'add_improvement' %}" id="improvement-form">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="improvement-project-select">Select Project</label>
+                                    <select id="improvement-project-select" name="project_id" class="project-select" required>
+                                        <option value="">-- Select a project --</option>
+                                        {% for project in projects %}
+                                        <option value="{{ project.id }}">{{ project.name }}</option>
+                                        {% empty %}
+                                        <option value="" disabled>No projects available</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="improvement-suggestion">Improvement Suggestion</label>
+                                    <textarea id="improvement-suggestion" name="suggestion" class="form-control" rows="3" placeholder="Add your suggestion for improvement..."></textarea>
+                                </div>
+                                
+                                <button type="submit" class="submit-btn">Add Improvement Suggestion</button>
+                            </form>
+                        </div>
+                        
+                        <div class="improvement-list">
+                            <h3 style="margin-bottom: 15px; color: #1e293b;">Recent Improvements</h3>
+                            
+                            {% for improvement in improvements %}
+                            <div class="improvement-item {% if improvement.is_implemented %}implemented{% endif %}" data-id="{{ improvement.id }}">
+                                <div class="improvement-author">
+                                    {{ improvement.user.get_full_name|default:improvement.user.username }}
+                                    <span class="improvement-date">{{ improvement.created_at|date:"M d, Y" }}</span>
+                                    {% if improvement.is_implemented %}
+                                    <span class="improvement-badge">Implemented</span>
+                                    {% endif %}
+                                </div>
+                                <div class="improvement-text">
+                                    {{ improvement.suggestion }}
+                                </div>
+                                <button class="toggle-implemented {% if improvement.is_implemented %}checked{% endif %}"></button>
+                            </div>
+                            {% empty %}
+                            <p style="color: #64748b; text-align: center;">No improvement suggestions yet.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -283,6 +712,165 @@
             toggleButton.addEventListener('click', function() {
                 sidebar.classList.toggle('collapsed');
             });
+            
+            // Logout confirmation
+            const logoutLink = document.getElementById('logout-link');
+            logoutLink.addEventListener('click', function(event) {
+                event.preventDefault();
+                if (confirm('Are you sure you want to log out?')) {
+                    window.location.href = this.getAttribute('href');
+                }
+            });
+            
+            // Health slider functionality
+            const healthSlider = document.getElementById('health-slider');
+            const healthPercentage = document.getElementById('health-percentage');
+            const healthStatusText = document.getElementById('health-status-text');
+            
+            function updateSliderAppearance(value) {
+                // Update percentage text
+                healthPercentage.textContent = value;
+                
+                // Update thumb position color
+                const thumbPosition = (value / 100) * (healthSlider.offsetWidth - 25); // 25 is thumb width
+                const thumbColor = getComputedStyle(healthSlider).background;
+                
+                // Update status text and color based on slider value
+                if (value < 30) {
+                    healthStatusText.textContent = "Project is not in good health";
+                    healthStatusText.style.color = "#ef4444";
+                } else if (value < 70) {
+                    healthStatusText.textContent = "Project needs some work";
+                    healthStatusText.style.color = "#f59e0b";
+                } else {
+                    healthStatusText.textContent = "Project is in good health";
+                    healthStatusText.style.color = "#10b981";
+                }
+            }
+            
+            // Initialize slider
+            updateSliderAppearance(healthSlider.value);
+            
+            // Update on slider change
+            healthSlider.addEventListener('input', function() {
+                updateSliderAppearance(this.value);
+            });
+            
+            // Form submission confirmation
+            document.getElementById('health-form').addEventListener('submit', function(event) {
+                const projectSelect = document.getElementById('project-select');
+                if (projectSelect.value === '') {
+                    event.preventDefault();
+                    alert('Please select a project first.');
+                    return false;
+                }
+                
+                // Confirm submission
+                if (!confirm('Are you sure you want to update the health status for this project?')) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Comment section toggle
+            const commentHeader = document.querySelector('.comment-header');
+            const commentContent = document.querySelector('.comment-content');
+            
+            commentHeader.addEventListener('click', function() {
+                // Toggle comment content visibility
+                if (commentContent.style.display === 'none') {
+                    commentContent.style.display = 'block';
+                    this.querySelector('span:last-child').textContent = '−';
+                } else {
+                    commentContent.style.display = 'none';
+                    this.querySelector('span:last-child').textContent = '+';
+                }
+            });
+            
+            // Close message alerts
+            const closeButtons = document.querySelectorAll('.close-message');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.parentElement.style.display = 'none';
+                });
+            });
+            
+            // Auto-hide messages after 5 seconds
+            setTimeout(function() {
+                const messages = document.querySelectorAll('.message-alert');
+                messages.forEach(message => {
+                    message.style.display = 'none';
+                });
+            }, 5000);
+            
+            {% if is_manager %}
+            // Improvement section toggle
+            const improvementHeader = document.querySelector('.improvement-header');
+            const improvementContent = document.querySelector('.improvement-content');
+            
+            improvementHeader.addEventListener('click', function() {
+                // Toggle improvement content visibility
+                if (improvementContent.style.display === 'none') {
+                    improvementContent.style.display = 'block';
+                    this.querySelector('span:last-child').textContent = '−';
+                } else {
+                    improvementContent.style.display = 'none';
+                    this.querySelector('span:last-child').textContent = '+';
+                }
+            });
+            
+            // Toggle implementation status
+            const toggleButtons = document.querySelectorAll('.toggle-implemented');
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const improvementItem = this.closest('.improvement-item');
+                    const improvementId = improvementItem.dataset.id;
+                    
+                    // Send AJAX request to toggle implementation status
+                    fetch(`/toggle-improvement/${improvementId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update UI based on new status
+                            if (data.is_implemented) {
+                                this.classList.add('checked');
+                                improvementItem.classList.add('implemented');
+                                
+                                // Add implemented badge if not present
+                                if (!improvementItem.querySelector('.improvement-badge')) {
+                                    const badge = document.createElement('span');
+                                    badge.classList.add('improvement-badge');
+                                    badge.textContent = 'Implemented';
+                                    improvementItem.querySelector('.improvement-author').appendChild(badge);
+                                }
+                            } else {
+                                this.classList.remove('checked');
+                                improvementItem.classList.remove('implemented');
+                                
+                                // Remove implemented badge
+                                const badge = improvementItem.querySelector('.improvement-badge');
+                                if (badge) {
+                                    badge.remove();
+                                }
+                            }
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while updating implementation status');
+                    });
+                });
+            });
+            {% endif %}
         });
     </script>
 </body>

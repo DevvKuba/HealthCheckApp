@@ -16,13 +16,16 @@
             height: 100vh;
         }
         .sidebar {
-            width: 170px;
-            background-color: white;
+            width: 240px;
+            background-color: #1e293b;
             padding: 20px 0;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid #e0e0e0;
-            transition: width 0.3s ease;
+            border-right: 1px solid #2c3e50;
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            position: relative;
+            overflow-y: auto;
         }
         .sidebar.collapsed {
             width: 0;
@@ -32,29 +35,94 @@
         .sidebar-buttons {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            padding: 0 10px;
+            gap: 12px;
+            padding: 15px;
+            margin-top: 20px;
         }
         .sidebar-button {
-            background-color: #2196F3;
-            color: white;
+            background-color: transparent;
+            color: #e2e8f0;
             border: none;
-            border-radius: 5px;
-            padding: 10px;
-            text-align: center;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: left;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
             width: 100%;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            line-height: 1.2;
+        }
+        .sidebar-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(3px);
+        }
+        .sidebar-button::before {
+            content: "";
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.8;
+        }
+        .sidebar-button:nth-child(1)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(2)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(3)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'%3E%3C/path%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(4)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(5)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'%3E%3C/path%3E%3C/svg%3E");
         }
         .active-button {
-            background-color: #0d47a1;
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .active-button::before {
+            opacity: 1;
         }
         .logout-button {
-            background-color: #3f51b5;
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #fecaca;
             margin-top: auto;
-            width: calc(100% - 20px);
-            margin-left: 10px;
+            width: calc(100% - 30px);
+            margin-left: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            padding: 12px 15px;
+            transition: all 0.2s ease;
+        }
+        .logout-button:hover {
+            background-color: rgba(239, 68, 68, 0.3);
+        }
+        .logout-button::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fecaca'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .app-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 20px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             margin-bottom: 10px;
+        }
+        .app-logo span {
+            color: #3b82f6;
         }
         .main-content {
             flex: 1;
@@ -152,11 +220,133 @@
             color: #2196F3;
             margin-right: 5px;
         }
+        .username-display {
+            font-size: 14px;
+            color: #333;
+            margin-left: 10px;
+        }
+        .add-project-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        .add-project-btn:hover {
+            background-color: #0d8bf2;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .btn-primary {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .messages-container {
+            padding: 0 20px;
+            margin-top: 20px;
+        }
+        .message-alert {
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            position: relative;
+        }
+        .message-alert.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+        .message-alert.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+        .close-message {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: inherit;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="sidebar" id="sidebar">
+            <div class="app-logo">
+                Health<span>Check</span>
+            </div>
             <div class="sidebar-buttons">
                 <button class="sidebar-button active-button">Dashboard</button>
                 <a href="{% url 'project_health' %}" style="text-decoration: none; width: 100%;">
@@ -170,7 +360,7 @@
                     <button class="sidebar-button">Chat</button>
                 </a>
             </div>
-            <a href="{% url 'logout' %}" style="text-decoration: none; margin-top: auto;">
+            <a href="{% url 'logout' %}" style="text-decoration: none; margin-top: auto; display: block;" id="logout-link">
                 <button class="sidebar-button logout-button">Log Out</button>
             </a>
         </div>
@@ -182,94 +372,130 @@
                 <div class="header-right">
                     <span class="notification-icon">🔔</span>
                     <span class="profile-icon">👤</span>
+                    <span class="username-display">Welcome, 
+                        {% if user.first_name %}
+                            {{ user.first_name }} {{ user.last_name }}
+                        {% else %}
+                            {{ username }}
+                        {% endif %}
+                    </span>
                 </div>
             </div>
+            
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="message-alert {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                    <button class="close-message">&times;</button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
             
             <div class="cards-container">
                 <div class="card">
                     <h3>Total Project</h3>
-                    <p>20</p>
+                    <p>{{ total_projects }}</p>
                 </div>
                 <div class="card">
                     <h3>Active Projects</h3>
-                    <p>1</p>
+                    <p>{{ active_projects }}</p>
                 </div>
                 <div class="card">
                     <h3>Team Member</h3>
-                    <p>15</p>
+                    <p>{{ team_members }}</p>
                 </div>
                 <div class="card">
                     <h3>Completed Project</h3>
-                    <p>19</p>
+                    <p>{{ completed_projects }}</p>
                 </div>
             </div>
             
             <div class="table-container">
-                <h2 class="table-title">Table</h2>
+                <h2 class="table-title">Projects</h2>
                 <div class="table-header">
                     <div class="table-header-cell">Projects <span class="sort-icon">↓</span></div>
-                    <div class="table-header-cell">Team_id <span class="sort-icon">↓</span></div>
-                    <div class="table-header-cell">Department_id <span class="sort-icon">↓</span></div>
+                    <div class="table-header-cell">Team <span class="sort-icon">↓</span></div>
+                    <div class="table-header-cell">Department <span class="sort-icon">↓</span></div>
                 </div>
                 
+                {% for project in projects %}
                 <div class="table-row">
-                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 1</div>
-                    <div class="table-cell">143</div>
-                    <div class="table-cell">244</div>
+                    <div class="table-cell"><span class="eye-icon">👁️</span> {{ project.name }}</div>
+                    <div class="table-cell">{{ project.team.name }}</div>
+                    <div class="table-cell">{{ project.department.name }}</div>
                 </div>
-                
+                {% empty %}
                 <div class="table-row">
-                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 2</div>
-                    <div class="table-cell">675</div>
-                    <div class="table-cell">424</div>
+                    <div class="table-cell" colspan="3" style="text-align: center;">No projects found. Add a new project using the + button.</div>
                 </div>
-                
-                <div class="table-row">
-                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 3</div>
-                    <div class="table-cell">897</div>
-                    <div class="table-cell">373</div>
-                </div>
-                
-                <div class="table-row">
-                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 4</div>
-                    <div class="table-cell">465</div>
-                    <div class="table-cell">134</div>
-                </div>
-                
-                <div class="table-row">
-                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 5</div>
-                    <div class="table-cell">675</div>
-                    <div class="table-cell">424</div>
-                </div>
-                
-                <div class="table-row">
-                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 6</div>
-                    <div class="table-cell">975</div>
-                    <div class="table-cell">143</div>
-                </div>
-                
-                <div class="table-row">
-                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 7</div>
-                    <div class="table-cell">435</div>
-                    <div class="table-cell">258</div>
-                </div>
-                
-                <div class="table-row">
-                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 8</div>
-                    <div class="table-cell">324</div>
-                    <div class="table-cell">574</div>
-                </div>
-                
-                <div class="table-row">
-                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 9</div>
-                    <div class="table-cell">564</div>
-                    <div class="table-cell">546</div>
-                </div>
-                
-                <div class="table-row">
-                    <div class="table-cell"><span class="eye-icon">👁️</span> Project 10</div>
-                    <div class="table-cell">685</div>
-                    <div class="table-cell">543</div>
+                {% endfor %}
+            </div>
+            
+            <!-- Add Project Button -->
+            <button class="add-project-btn" id="add-project-btn">+</button>
+            
+            <!-- Add Project Modal -->
+            <div class="modal" id="add-project-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Add New Project</h3>
+                        <button class="close-modal" id="close-modal">&times;</button>
+                    </div>
+                    <form id="add-project-form" method="post" action="{% url 'add_project' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="project-name">Project Name*</label>
+                            <input type="text" id="project-name" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-description">Description</label>
+                            <textarea id="project-description" name="description" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-start-date">Start Date*</label>
+                            <input type="date" id="project-start-date" name="start_date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-end-date">End Date</label>
+                            <input type="date" id="project-end-date" name="end_date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="project-status">Status*</label>
+                            <select id="project-status" name="status" class="form-control" required>
+                                <option value="active">Active</option>
+                                <option value="completed">Completed</option>
+                                <option value="on_hold">On Hold</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-health">Health*</label>
+                            <select id="project-health" name="health" class="form-control" required>
+                                <option value="good">Good Health</option>
+                                <option value="needs_work">Needs Work</option>
+                                <option value="poor">Poor Health</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-team">Team*</label>
+                            <select id="project-team" name="team" class="form-control" required>
+                                {% for team in teams %}
+                                <option value="{{ team.id }}">{{ team.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-department">Department*</label>
+                            <select id="project-department" name="department" class="form-control" required>
+                                {% for dept in departments %}
+                                <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary">Create Project</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -284,6 +510,54 @@
             toggleButton.addEventListener('click', function() {
                 sidebar.classList.toggle('collapsed');
             });
+            
+            // Logout confirmation
+            const logoutLink = document.getElementById('logout-link');
+            logoutLink.addEventListener('click', function(event) {
+                event.preventDefault();
+                if (confirm('Are you sure you want to log out?')) {
+                    window.location.href = this.getAttribute('href');
+                }
+            });
+            
+            // Add Project Modal Functionality
+            const addProjectBtn = document.getElementById('add-project-btn');
+            const modal = document.getElementById('add-project-modal');
+            const closeModal = document.getElementById('close-modal');
+            
+            addProjectBtn.addEventListener('click', function() {
+                modal.style.display = 'flex';
+            });
+            
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // Close modal if clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // Initialize default date
+            document.getElementById('project-start-date').valueAsDate = new Date();
+            
+            // Close message alerts
+            const closeButtons = document.querySelectorAll('.close-message');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.parentElement.style.display = 'none';
+                });
+            });
+            
+            // Auto-hide messages after 5 seconds
+            setTimeout(function() {
+                const messages = document.querySelectorAll('.message-alert');
+                messages.forEach(message => {
+                    message.style.display = 'none';
+                });
+            }, 5000);
         });
     </script>
 </body>

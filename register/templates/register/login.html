@@ -60,18 +60,65 @@
             text-decoration: none;
             color: #0096FF;
         }
+        .messages {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 15px;
+            list-style-type: none;
+            padding: 0;
+        }
+        .messages li {
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+        .messages .error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .messages .info {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+        }
+        .messages .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .error-feedback {
+            color: #c62828;
+            font-size: 12px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="auth-form">
         <h2>Log In</h2>
-        <form>
+        
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
             <div class="form-group">
-                <input type="email" placeholder="Email" required>
+                <input type="text" name="username" placeholder="Username" required>
             </div>
             <div class="form-group">
-                <input type="password" placeholder="Password" required>
+                <input type="password" name="password" placeholder="Password" required>
             </div>
+            
+            {% if form.errors %}
+            <div class="error-feedback">
+                Your username and password didn't match. Please try again.
+            </div>
+            {% endif %}
+            
             <div class="form-group">
                 <button type="submit" class="btn-primary">Login</button>
             </div>
