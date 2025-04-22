@@ -784,6 +784,9 @@ def add_comment_reply(request):
     # Redirect back to project health page
     return redirect('project_health')
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 

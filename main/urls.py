@@ -22,5 +22,8 @@ urlpatterns = [
     path("reject-project/<int:project_id>/", views.reject_project, name="reject_project"),
     path("delete-user/<int:user_id>/", views.delete_user, name="delete_user"),
     path("add-comment-reply/", views.add_comment_reply, name="add_comment_reply"),
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 ]

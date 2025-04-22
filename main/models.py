@@ -89,5 +89,9 @@ class CommentReply(models.Model):
         ordering = ['created_at']
     
     def __str__(self):
+<<<<<<< Updated upstream
+        return f"Reply by {self.user.username} to comment {self.comment.id}"
+>>>>>>> Stashed changes
+=======
         return f"Reply by {self.user.username} to comment {self.comment.id}"
 >>>>>>> Stashed changes
