@@ -5,8 +5,6 @@ urlpatterns = [
     path("<int:id>", views.index, name="index"),
     path("home/", views.home, name="home"),
     path("create/", views.create, name="create"),
-<<<<<<< Updated upstream
-=======
     path("dashboard/", views.dashboard, name="dashboard"),
     path("chat/", views.chat, name="chat"),
     path("settings/", views.settings, name="settings"),
@@ -22,5 +20,4 @@ urlpatterns = [
     path("reject-project/<int:project_id>/", views.reject_project, name="reject_project"),
     path("delete-user/<int:user_id>/", views.delete_user, name="delete_user"),
     path("add-comment-reply/", views.add_comment_reply, name="add_comment_reply"),
->>>>>>> Stashed changes
 ]
