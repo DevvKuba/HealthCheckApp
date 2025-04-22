@@ -39,28 +39,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>
-        {%block title%} Sky Site {%endblock%}
+        {%block title%} Kuba's Site {%endblock%}
     </title>
 </head>
 <body>
-    <div class="sidenav">
-        <a href="/home">Dashboard</a>
-        <a href="/create">HealthCheck</a>
-        <a href="/2">Settings</a>
-    </div>
 
     <div id ="content",name="content", class="main">
         <div class="row justify-content-center">
             <div class="col-8">
-                <h1 class="mt-2">Health Check App</h1>
+                <h1 class="mt-2">My Site</h1>
                 <hr class="mt-0 mb-4">
 
-                {% if user.is_authenticated %}
-                     {%block content%}
-                     {% endblock %}
-                {% else %}
-                     <p>Login<a href="/login"> Here</a></p>
-                 {% endif %}
+                 {%block content%}
+                 {% endblock %}
 
             </div>
         </div>
