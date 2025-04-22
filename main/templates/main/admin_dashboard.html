@@ -16,75 +16,132 @@
             height: 100vh;
         }
         .sidebar {
-            background-color: #3498db;
-            color: white;
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
+            width: 240px;
+            background-color: #1e293b;
+            padding: 20px 0;
             display: flex;
             flex-direction: column;
-            transition: width 0.3s ease;
+            border-right: 1px solid #2c3e50;
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            position: relative;
+            overflow-y: auto;
         }
-        
         .sidebar.collapsed {
-            width: 60px;
+            width: 0;
+            padding: 0;
+            overflow: hidden;
         }
-
         .sidebar-buttons {
             display: flex;
             flex-direction: column;
-            padding: 20px 10px;
-            gap: 10px;
+            gap: 12px;
+            padding: 15px;
+            margin-top: 20px;
         }
         .sidebar-button {
-            background-color: #2196F3;
-            color: white;
+            background-color: transparent;
+            color: #e2e8f0;
             border: none;
-            border-radius: 5px;
-            padding: 10px;
-            text-align: center;
+            border-radius: 8px;
+            padding: 12px 15px;
+            text-align: left;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
             width: 100%;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            line-height: 1.2;
+        }
+        .sidebar-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(3px);
+        }
+        .sidebar-button::before {
+            content: "";
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.8;
+        }
+        .sidebar-button:nth-child(1)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(2)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(3)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'%3E%3C/path%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(4)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .sidebar-button:nth-child(5)::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e2e8f0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'%3E%3C/path%3E%3C/svg%3E");
         }
         .active-button {
-            background-color: #0d47a1;
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .admin-button {
-            background-color: #D32F2F;
+        .active-button::before {
+            opacity: 1;
         }
         .logout-button {
-            background-color: #3f51b5;
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #fecaca;
             margin-top: auto;
-            width: calc(100% - 20px);
-            margin-left: 10px;
+            width: calc(100% - 30px);
+            margin-left: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            padding: 12px 15px;
+            transition: all 0.2s ease;
+        }
+        .logout-button:hover {
+            background-color: rgba(239, 68, 68, 0.3);
+        }
+        .logout-button::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fecaca'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .app-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 20px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             margin-bottom: 10px;
         }
+        .app-logo span {
+            color: #3b82f6;
+        }
         .main-content {
-            margin-left: 250px;
+            flex: 1;
             padding: 20px;
-            transition: margin-left 0.3s ease;
+            overflow-y: auto;
         }
-        
-        .main-content.expanded {
-            margin-left: 60px;
-        }
-
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
             border-bottom: 1px solid #e0e0e0;
-            background-color: white;
         }
         .header-left {
             display: flex;
             align-items: center;
         }
         .menu-icon {
+            color: #2196F3;
             font-size: 24px;
             cursor: pointer;
         }
@@ -235,17 +292,117 @@
             cursor: pointer;
             font-weight: bold;
         }
+        .username-display {
+            font-size: 14px;
+            color: #333;
+            margin-left: 10px;
+        }
+        .messages-container {
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+        .message-alert {
+            padding: 12px 20px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            position: relative;
+        }
+        .message-alert.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+        .message-alert.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+        .message-alert.info {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+            border-left: 4px solid #0d47a1;
+        }
+        .close-message {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: inherit;
+        }
+        .badge {
+            background-color: #ef4444;
+            color: white;
+            border-radius: 12px;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        .approvals-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .approval-card {
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .approval-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        .approval-name {
+            font-weight: bold;
+            color: #1e293b;
+            font-size: 16px;
+        }
+        .approval-username {
+            color: #64748b;
+            font-size: 14px;
+        }
+        .approval-details {
+            margin-bottom: 15px;
+        }
+        .approval-details p {
+            margin: 5px 0;
+            color: #334155;
+        }
+        .approval-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .approval-form {
+            display: inline-block;
+        }
+        .approve-btn {
+            background-color: #22c55e;
+        }
+        .approve-btn:hover {
+            background-color: #16a34a;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
+            <div class="app-logo">
+                Health<span>Check</span> Admin
+            </div>
             <div class="sidebar-buttons">
-                <a href="{% url 'dashboard' %}" style="text-decoration: none; width: 100%;">
-                    <button class="sidebar-button">Dashboard</button>
-                </a>
-                <a href="{% url 'project_health' %}" style="text-decoration: none; width: 100%;">
-                    <button class="sidebar-button">Project Health</button>
+                <button class="sidebar-button active-button">Admin Dashboard</button>
+                <a href="{% url 'admin_projects' %}" style="text-decoration: none; width: 100%;">
+                    <button class="sidebar-button">Project Management</button>
                 </a>
                 <a href="{% url 'settings' %}" style="text-decoration: none; width: 100%;">
                     <button class="sidebar-button">Settings</button>
@@ -254,44 +411,130 @@
                 <a href="{% url 'chat' %}" style="text-decoration: none; width: 100%;">
                     <button class="sidebar-button">Chat</button>
                 </a>
-                <button class="sidebar-button admin-button">Admin Dashboard</button>
             </div>
-            <a href="{% url 'logout' %}" style="text-decoration: none; margin-top: auto;">
+            <a href="{% url 'logout' %}" style="text-decoration: none; margin-top: auto; display: block;" id="logout-link">
                 <button class="sidebar-button logout-button">Log Out</button>
             </a>
         </div>
         <div class="main-content">
             <div class="header">
                 <div class="header-left">
-                    <span class="menu-icon" id="sidebarToggle">≡</span>
+                    <span class="menu-icon" id="toggle-sidebar">≡</span>
                 </div>
                 <div class="header-right">
-                    <span class="back-icon">←</span>
                     <span class="notification-icon">🔔</span>
                     <span class="profile-icon">👤</span>
+                    <span class="username-display">Welcome, 
+                        {% if user.first_name %}
+                            {{ user.first_name }} {{ user.last_name }}
+                        {% else %}
+                            {{ username }}
+                        {% endif %}
+                    </span>
                 </div>
             </div>
+            
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="message-alert {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                    <button class="close-message">&times;</button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% if user.profile.role != 'admin' %}
+            <div class="alert-message warning-message">
+                <p>You are not logged in as an admin user. You should use the <a href="{% url 'dashboard' %}">Regular Dashboard</a> instead.</p>
+            </div>
+            {% endif %}
             
             <h1 class="admin-title">Admin Dashboard</h1>
             
             <div class="quick-stats">
                 <div class="stat-card">
                     <h3>Total Users</h3>
-                    <p>125</p>
+                    <p>{{ total_users }}</p>
                 </div>
                 <div class="stat-card">
                     <h3>Active Projects</h3>
-                    <p>18</p>
+                    <p>{{ active_projects }}</p>
                 </div>
                 <div class="stat-card">
                     <h3>Pending Approvals</h3>
-                    <p>7</p>
+                    <p>{{ pending_count }}</p>
                 </div>
                 <div class="stat-card">
-                    <h3>System Health</h3>
-                    <p>Good</p>
+                    <h3>Total Projects</h3>
+                    <p>{{ total_projects }}</p>
                 </div>
             </div>
+            
+            {% if pending_count > 0 %}
+            <div class="admin-section" id="pending-approvals-section">
+                <h2 class="section-title">Pending Employee Approvals <span class="badge">{{ pending_count }}</span></h2>
+                <div class="approvals-container">
+                    {% for profile in pending_approvals %}
+                    <div class="approval-card">
+                        <div class="approval-header">
+                            <span class="approval-name">{{ profile.user.first_name }} {{ profile.user.last_name }}</span>
+                            <span class="approval-username">@{{ profile.user.username }}</span>
+                        </div>
+                        <div class="approval-details">
+                            <p><strong>Email:</strong> {{ profile.user.email }}</p>
+                            <p><strong>Role:</strong> {{ profile.get_role_display }}</p>
+                            <p><strong>Company:</strong> {{ profile.company.name }}</p>
+                            <p><strong>Registered:</strong> {{ profile.user.date_joined|date:"M d, Y" }}</p>
+                        </div>
+                        <div class="approval-actions">
+                            <form method="post" action="{% url 'approve_employee' profile.user.id %}" class="approval-form">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn approve-btn">Approve</button>
+                            </form>
+                            <form method="post" action="{% url 'reject_employee' profile.user.id %}" class="approval-form">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn delete-btn">Reject</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if pending_projects_count > 0 %}
+            <div class="admin-section" id="pending-projects-section">
+                <h2 class="section-title">Pending Project Approvals <span class="badge">{{ pending_projects_count }}</span></h2>
+                <div class="approvals-container">
+                    {% for project in pending_projects %}
+                    <div class="approval-card">
+                        <div class="approval-header">
+                            <span class="approval-name">{{ project.name }}</span>
+                            <span class="approval-date">Created: {{ project.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <div class="approval-details">
+                            <p><strong>Created by:</strong> {{ project.created_by.username }} ({{ project.created_by.first_name }} {{ project.created_by.last_name }})</p>
+                            <p><strong>Team:</strong> {{ project.team.name }}</p>
+                            <p><strong>Department:</strong> {{ project.department.name }}</p>
+                            <p><strong>Description:</strong> {{ project.description|default:"No description" }}</p>
+                        </div>
+                        <div class="approval-actions">
+                            <form method="post" action="{% url 'approve_project' project.id %}" class="approval-form">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn approve-btn">Approve Project</button>
+                            </form>
+                            <form method="post" action="{% url 'reject_project' project.id %}" class="approval-form">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn delete-btn">Reject Project</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
             
             <div class="tab-container">
                 <div class="tabs">
@@ -307,94 +550,43 @@
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>User ID</th>
+                                    <th>ID</th>
+                                    <th>Username</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Role</th>
-                                    <th>Status</th>
+                                    <th>Company</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for profile in user_profiles %}
                                 <tr>
-                                    <td>001</td>
-                                    <td>John Doe</td>
-                                    <td>john.doe@example.com</td>
-                                    <td>Admin</td>
-                                    <td>Active</td>
+                                    <td>{{ profile.user.id }}</td>
+                                    <td>{{ profile.user.username }}</td>
+                                    <td>{{ profile.user.first_name }} {{ profile.user.last_name }}</td>
+                                    <td>{{ profile.user.email }}</td>
+                                    <td>{{ profile.get_role_display }}</td>
+                                    <td>{{ profile.company.name|default:"N/A" }}</td>
                                     <td>
-                                        <button class="action-btn">Edit</button>
-                                        <button class="action-btn delete-btn">Delete</button>
+                                        {% if profile.user.id != user.id %}
+                                            <button class="action-btn">Edit</button>
+                                            <form method="post" action="{% url 'delete_user' profile.user.id %}" class="delete-form" style="display: inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to remove this user?');">Delete</button>
+                                            </form>
+                                        {% else %}
+                                            <span class="badge" style="background-color: #3b82f6;">Current User</span>
+                                        {% endif %}
                                     </td>
                                 </tr>
+                                {% empty %}
                                 <tr>
-                                    <td>002</td>
-                                    <td>Jane Smith</td>
-                                    <td>jane.smith@example.com</td>
-                                    <td>Manager</td>
-                                    <td>Active</td>
-                                    <td>
-                                        <button class="action-btn">Edit</button>
-                                        <button class="action-btn delete-btn">Delete</button>
-                                    </td>
+                                    <td colspan="7">No users found</td>
                                 </tr>
-                                <tr>
-                                    <td>003</td>
-                                    <td>Mike Johnson</td>
-                                    <td>mike.j@example.com</td>
-                                    <td>Developer</td>
-                                    <td>Inactive</td>
-                                    <td>
-                                        <button class="action-btn">Edit</button>
-                                        <button class="action-btn delete-btn">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>004</td>
-                                    <td>Sarah Williams</td>
-                                    <td>sarah.w@example.com</td>
-                                    <td>Tester</td>
-                                    <td>Active</td>
-                                    <td>
-                                        <button class="action-btn">Edit</button>
-                                        <button class="action-btn delete-btn">Delete</button>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
-                    </div>
-                    
-                    <div class="admin-section">
-                        <h2 class="section-title">Add New User</h2>
-                        <form>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="firstName">First Name</label>
-                                    <input type="text" id="firstName" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="lastName">Last Name</label>
-                                    <input type="text" id="lastName" class="form-control">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" id="email" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="role">Role</label>
-                                    <select id="role" class="form-control">
-                                        <option>Select Role</option>
-                                        <option>Admin</option>
-                                        <option>Manager</option>
-                                        <option>Developer</option>
-                                        <option>Tester</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button type="button" class="btn-primary">Add User</button>
-                        </form>
                     </div>
                 </div>
                 
@@ -404,88 +596,36 @@
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>Project ID</th>
+                                    <th>ID</th>
                                     <th>Project Name</th>
-                                    <th>Manager</th>
+                                    <th>Created By</th>
                                     <th>Status</th>
-                                    <th>Team Size</th>
+                                    <th>Health</th>
+                                    <th>Team</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for project in projects %}
                                 <tr>
-                                    <td>P001</td>
-                                    <td>Website Redesign</td>
-                                    <td>John Doe</td>
-                                    <td>In Progress</td>
-                                    <td>8</td>
+                                    <td>{{ project.id }}</td>
+                                    <td>{{ project.name }}</td>
+                                    <td>{{ project.created_by.username }}</td>
+                                    <td>{{ project.get_status_display }}</td>
+                                    <td>{{ project.get_health_display }}</td>
+                                    <td>{{ project.team.name }}</td>
                                     <td>
                                         <button class="action-btn">Edit</button>
                                         <button class="action-btn delete-btn">Delete</button>
                                     </td>
                                 </tr>
+                                {% empty %}
                                 <tr>
-                                    <td>P002</td>
-                                    <td>Mobile App Development</td>
-                                    <td>Jane Smith</td>
-                                    <td>Planning</td>
-                                    <td>5</td>
-                                    <td>
-                                        <button class="action-btn">Edit</button>
-                                        <button class="action-btn delete-btn">Delete</button>
-                                    </td>
+                                    <td colspan="7">No projects found</td>
                                 </tr>
-                                <tr>
-                                    <td>P003</td>
-                                    <td>Database Migration</td>
-                                    <td>Mike Johnson</td>
-                                    <td>Completed</td>
-                                    <td>3</td>
-                                    <td>
-                                        <button class="action-btn">Edit</button>
-                                        <button class="action-btn delete-btn">Delete</button>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
-                    </div>
-                    
-                    <div class="admin-section">
-                        <h2 class="section-title">Add New Project</h2>
-                        <form>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="projectName">Project Name</label>
-                                    <input type="text" id="projectName" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="projectManager">Project Manager</label>
-                                    <select id="projectManager" class="form-control">
-                                        <option>Select Manager</option>
-                                        <option>John Doe</option>
-                                        <option>Jane Smith</option>
-                                        <option>Mike Johnson</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="startDate">Start Date</label>
-                                    <input type="date" id="startDate" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="endDate">End Date</label>
-                                    <input type="date" id="endDate" class="form-control">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="projectDescription">Description</label>
-                                    <textarea id="projectDescription" class="form-control" rows="3"></textarea>
-                                </div>
-                            </div>
-                            <button type="button" class="btn-primary">Add Project</button>
-                        </form>
                     </div>
                 </div>
                 
@@ -500,7 +640,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="adminEmail">Admin Email</label>
-                                    <input type="email" id="adminEmail" class="form-control" value="admin@healthcheckapp.com">
+                                    <input type="email" id="adminEmail" class="form-control" value="{{ user.email }}">
                                 </div>
                             </div>
                             <div class="form-row">
@@ -522,23 +662,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Email Notifications</label>
-                                    <div>
-                                        <input type="checkbox" id="notifyNewUsers" checked>
-                                        <label for="notifyNewUsers">New user registrations</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" id="notifyProjectUpdates" checked>
-                                        <label for="notifyProjectUpdates">Project status updates</label>
-                                    </div>
-                                    <div>
-                                        <input type="checkbox" id="notifySystemAlerts" checked>
-                                        <label for="notifySystemAlerts">System alerts</label>
-                                    </div>
-                                </div>
-                            </div>
                             <button type="button" class="btn-primary">Save Settings</button>
                         </form>
                     </div>
@@ -554,44 +677,11 @@
                                     <th>User</th>
                                     <th>Action</th>
                                     <th>Details</th>
-                                    <th>IP Address</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>2023-08-15 09:23:45</td>
-                                    <td>John Doe</td>
-                                    <td>Login</td>
-                                    <td>User logged in successfully</td>
-                                    <td>192.168.1.1</td>
-                                </tr>
-                                <tr>
-                                    <td>2023-08-15 10:45:12</td>
-                                    <td>Jane Smith</td>
-                                    <td>Update</td>
-                                    <td>Updated project status for 'Mobile App Development'</td>
-                                    <td>192.168.1.2</td>
-                                </tr>
-                                <tr>
-                                    <td>2023-08-15 11:30:05</td>
-                                    <td>Admin</td>
-                                    <td>Create</td>
-                                    <td>Added new user 'Mike Johnson'</td>
-                                    <td>192.168.1.3</td>
-                                </tr>
-                                <tr>
-                                    <td>2023-08-15 13:15:22</td>
-                                    <td>Sarah Williams</td>
-                                    <td>Delete</td>
-                                    <td>Deleted project 'Legacy System Migration'</td>
-                                    <td>192.168.1.4</td>
-                                </tr>
-                                <tr>
-                                    <td>2023-08-15 14:05:18</td>
-                                    <td>Mike Johnson</td>
-                                    <td>Login</td>
-                                    <td>Failed login attempt</td>
-                                    <td>192.168.1.5</td>
+                                    <td colspan="4">No logs available yet</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -622,14 +712,37 @@
         
         // Sidebar toggle functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
+            const toggleButton = document.getElementById('toggle-sidebar');
+            const sidebar = document.getElementById('sidebar');
             
-            sidebarToggle.addEventListener('click', function() {
+            toggleButton.addEventListener('click', function() {
                 sidebar.classList.toggle('collapsed');
-                mainContent.classList.toggle('expanded');
             });
+            
+            // Logout confirmation
+            const logoutLink = document.getElementById('logout-link');
+            logoutLink.addEventListener('click', function(event) {
+                event.preventDefault();
+                if (confirm('Are you sure you want to log out?')) {
+                    window.location.href = this.getAttribute('href');
+                }
+            });
+            
+            // Close message alerts
+            const closeButtons = document.querySelectorAll('.close-message');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.parentElement.style.display = 'none';
+                });
+            });
+            
+            // Auto-hide messages after 5 seconds
+            setTimeout(function() {
+                const messages = document.querySelectorAll('.message-alert');
+                messages.forEach(message => {
+                    message.style.display = 'none';
+                });
+            }, 5000);
         });
     </script>
 </body>

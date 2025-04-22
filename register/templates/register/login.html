@@ -1,3 +1,4 @@
+<!-- 9cca1fc2 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,34 +61,25 @@
             text-decoration: none;
             color: #0096FF;
         }
-        .messages {
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
             width: 100%;
             max-width: 300px;
-            margin-bottom: 15px;
-            list-style-type: none;
-            padding: 0;
+            text-align: center;
         }
-        .messages li {
-            padding: 10px;
-            margin-bottom: 5px;
-            border-radius: 4px;
-        }
-        .messages .error {
+        .message.error {
             background-color: #ffebee;
             color: #c62828;
         }
-        .messages .info {
-            background-color: #e3f2fd;
-            color: #0d47a1;
-        }
-        .messages .success {
+        .message.success {
             background-color: #e8f5e9;
             color: #2e7d32;
         }
-        .error-feedback {
-            color: #c62828;
-            font-size: 12px;
-            margin-top: 5px;
+        /* Hide the original labels */
+        label {
+            display: none;
         }
     </style>
 </head>
@@ -96,28 +88,25 @@
         <h2>Log In</h2>
         
         {% if messages %}
-        <ul class="messages">
             {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
             {% endfor %}
-        </ul>
         {% endif %}
         
-        <form method="post">
+        <form method="POST">
             {% csrf_token %}
             
             <div class="form-group">
-                <input type="text" name="username" placeholder="Username" required>
-            </div>
-            <div class="form-group">
-                <input type="password" name="password" placeholder="Password" required>
+                {{ form.username.errors }}
+                <input type="text" name="username" placeholder="Username" required id="id_username">
             </div>
             
-            {% if form.errors %}
-            <div class="error-feedback">
-                Your username and password didn't match. Please try again.
+            <div class="form-group">
+                {{ form.password.errors }}
+                <input type="password" name="password" placeholder="Password" required id="id_password">
             </div>
-            {% endif %}
             
             <div class="form-group">
                 <button type="submit" class="btn-primary">Login</button>

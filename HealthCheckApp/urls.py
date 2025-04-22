@@ -25,6 +25,8 @@ urlpatterns = [
     path('login/', v.login_view, name='login'),
     path('signup/', v.signup_view, name='signup'),
     path('logout/', v.logout_view, name='logout'),
+    path('company-code/', v.company_code_view, name='company_code'),
+    path('waiting-approval/', v.waiting_approval, name='waiting_approval'),
     path('', RedirectView.as_view(url='login/')),
     path('', include("main.urls")),
     path('', include("django.contrib.auth.urls")),

@@ -58,6 +58,7 @@ class Project(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_projects")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_approved = models.BooleanField(default=False, help_text="Whether this project is approved by admin")
     
     def __str__(self):
         return self.name
@@ -67,17 +68,7 @@ class ProjectComment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    read_by = models.ManyToManyField(User, related_name="read_comments", blank=True)
     
     def __str__(self):
         return f"Comment by {self.user.username} on {self.project.name}"
-
-class ProjectImprovement(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="improvements")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="improvement_suggestions")
-    suggestion = models.TextField()
-    is_implemented = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return f"Improvement suggestion for {self.project.name} by {self.user.username}"

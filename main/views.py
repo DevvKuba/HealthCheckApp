@@ -1,12 +1,48 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from .models import ToDoList, Item, Project, Team, Department, ProjectImprovement
+from .models import ToDoList, Item, Project, Team, Department, ProjectComment
 from .forms import CreateNewList
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.utils.dateparse import parse_date
+from functools import wraps
+from django.core.exceptions import PermissionDenied
+from register.models import UserProfile, Company
+
+# Create role-based decorators
+def admin_required(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        try:
+            from register.models import UserProfile
+            profile = UserProfile.objects.get(user=request.user)
+            if profile.role == 'admin':
+                return view_func(request, *args, **kwargs)
+            else:
+                messages.warning(request, "You don't have permission to access the admin dashboard.")
+                return redirect('dashboard')  # Redirect to employee dashboard
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+            return redirect('login')
+    return _wrapped_view
+
+def non_admin_required(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        try:
+            from register.models import UserProfile
+            profile = UserProfile.objects.get(user=request.user)
+            if profile.role != 'admin':
+                return view_func(request, *args, **kwargs)
+            else:
+                messages.warning(request, "Admins should use the admin dashboard.")
+                return redirect('admin_dashboard')  # Redirect to admin dashboard
+        except Exception as e:
+            # If profile doesn't exist or other error, still allow access
+            return view_func(request, *args, **kwargs)
+    return _wrapped_view
 
 # Create your views here.
 def index(response, id):
@@ -51,16 +87,23 @@ def create(response):
 
 # Add dashboard view - protected route
 @login_required
+@non_admin_required
 def dashboard(request):
     print("Dashboard view is being called!")
     
-    # Get projects data
-    projects = Project.objects.all().order_by('-created_at')
+    # Get projects data - only show approved projects
+    projects = Project.objects.filter(is_approved=True).order_by('-created_at')
     
-    # Get stats
-    total_projects = Project.objects.count()
-    active_projects = Project.objects.filter(status='active').count()
-    completed_projects = Project.objects.filter(status='completed').count()
+    # Get user's pending projects
+    pending_projects = Project.objects.filter(
+        created_by=request.user,
+        is_approved=False
+    ).order_by('-created_at')
+    
+    # Get stats - only count approved projects
+    total_projects = Project.objects.filter(is_approved=True).count()
+    active_projects = Project.objects.filter(status='active', is_approved=True).count()
+    completed_projects = Project.objects.filter(status='completed', is_approved=True).count()
     team_members = User.objects.count()
     
     # Get teams and departments for dropdown
@@ -82,6 +125,7 @@ def dashboard(request):
         'username': request.user.username,
         'user': request.user,
         'projects': projects,
+        'pending_projects': pending_projects,
         'teams': teams,
         'departments': departments,
         'total_projects': total_projects,
@@ -90,52 +134,6 @@ def dashboard(request):
         'team_members': team_members
     }
     return render(request, "main/dashboard.html", context)
-
-# View to handle adding a new project
-@login_required
-def add_project(request):
-    if request.method == "POST":
-        # Get form data
-        name = request.POST.get('name')
-        description = request.POST.get('description', '')
-        start_date = request.POST.get('start_date')
-        end_date = request.POST.get('end_date', None)
-        status = request.POST.get('status')
-        health = request.POST.get('health')
-        team_id = request.POST.get('team')
-        department_id = request.POST.get('department')
-        
-        try:
-            # Get related objects
-            team = Team.objects.get(id=team_id)
-            department = Department.objects.get(id=department_id)
-            
-            # Create the project
-            project = Project(
-                name=name,
-                description=description,
-                start_date=parse_date(start_date),
-                status=status,
-                health=health,
-                team=team,
-                department=department,
-                created_by=request.user
-            )
-            
-            # Add end date if provided
-            if end_date:
-                project.end_date = parse_date(end_date)
-                
-            project.save()
-            
-            # Add current user as a member
-            project.members.add(request.user)
-            
-            messages.success(request, f"Project '{name}' created successfully!")
-        except Exception as e:
-            messages.error(request, f"Error creating project: {str(e)}")
-        
-    return redirect('dashboard')
 
 # Add chat view - protected route
 @login_required
@@ -181,13 +179,31 @@ def settings(request):
         except Exception as e:
             messages.error(request, f"Error updating profile: {str(e)}")
     
+    # Try to get user profile information
+    try:
+        from register.models import UserProfile, Company
+        profile = UserProfile.objects.get(user=user)
+        
+        # If admin, get company information
+        company = None
+        if profile.role == 'admin':
+            try:
+                company = Company.objects.get(created_by=user)
+            except Company.DoesNotExist:
+                pass
+            
+    except Exception as e:
+        profile = None
+        company = None
+    
+    # Render the settings template with context
     context = {
         'username': user.username,
         'user': user,
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-        'email': user.email
+        'profile': profile,
+        'company': company
     }
+    
     return render(request, "main/settings.html", context)
 
 # Add a save_settings view for handling form submission
@@ -226,61 +242,54 @@ def save_settings(request):
 
 # Add project health view - protected route
 @login_required
+@non_admin_required
 def project_health(request):
     # Get all projects for the dropdown
     projects = Project.objects.all().order_by('name')
     
-    # Get recent health assessments and improvement suggestions
-    improvements = ProjectImprovement.objects.select_related('project', 'user').order_by('-created_at')[:10]
-    
-    # Check if user is admin or project manager (has created projects)
-    is_manager = request.user.is_staff or Project.objects.filter(created_by=request.user).exists()
+    # Get recent health assessments
+    # You could expand this to include more detailed assessment history
     
     context = {
         'username': request.user.username,
         'user': request.user,
         'projects': projects,
-        'improvements': improvements,
-        'is_manager': is_manager
     }
     return render(request, "main/project_health.html", context)
 
-# Add save_project_health view to handle health assessment submissions
+# Add save project health view - protected route
 @login_required
+@non_admin_required
 def save_project_health(request):
+    """Handle form submission to save project health updates"""
     if request.method == "POST":
         try:
             # Get form data
             project_id = request.POST.get('project_id')
-            health_percentage = request.POST.get('health_percentage')
-            comment = request.POST.get('comment', '')
+            health_status = request.POST.get('health_status')
+            comments = request.POST.get('comments', '')
             
+            # Validate data
+            if not project_id or not health_status:
+                messages.error(request, "Missing required fields")
+                return redirect('project_health')
+                
             # Get the project
             project = Project.objects.get(id=project_id)
             
-            # Update project health based on percentage
-            if int(health_percentage) >= 70:
-                health_status = 'good'
-            elif int(health_percentage) >= 30:
-                health_status = 'needs_work'
-            else:
-                health_status = 'poor'
-            
-            # Save the health status
+            # Update project health
             project.health = health_status
             project.save()
             
-            # Here you could also save the assessment history or comments
-            # For example, if you had a ProjectHealthAssessment model:
-            # ProjectHealthAssessment.objects.create(
-            #     project=project,
-            #     percentage=health_percentage,
-            #     status=health_status,
-            #     comment=comment,
-            #     assessed_by=request.user
-            # )
-            
-            messages.success(request, f"Health status for '{project.name}' updated successfully!")
+            # Add a comment if provided
+            if comments:
+                ProjectComment.objects.create(
+                    project=project,
+                    user=request.user,
+                    text=f"Health Update: {comments}"
+                )
+                
+            messages.success(request, f"Project health updated successfully for '{project.name}'")
         except Project.DoesNotExist:
             messages.error(request, "Project not found. Please select a valid project.")
         except Exception as e:
@@ -288,79 +297,372 @@ def save_project_health(request):
     
     return redirect('project_health')
 
-# Add improvement suggestion for a project - for admins and project managers
+# Add project view - protected route
 @login_required
-def add_improvement(request):
+@non_admin_required
+def add_project(request):
+    """Handle form submission to add a new project"""
     if request.method == "POST":
         try:
-            # Check if user is admin or project manager
-            is_manager = request.user.is_staff or Project.objects.filter(created_by=request.user).exists()
-            
-            if not is_manager:
-                messages.error(request, "Only project managers or admins can add improvement suggestions.")
-                return redirect('project_health')
-            
             # Get form data
-            project_id = request.POST.get('project_id')
-            suggestion = request.POST.get('suggestion')
+            name = request.POST.get('name')
+            description = request.POST.get('description', '')
+            team_id = request.POST.get('team')
+            department_id = request.POST.get('department')
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date', '')
+            status = request.POST.get('status', 'active')
+            health = request.POST.get('health', 'good')
             
-            if not suggestion.strip():
-                messages.error(request, "Please provide an improvement suggestion.")
-                return redirect('project_health')
+            # Check if name already exists
+            if Project.objects.filter(name=name).exists():
+                messages.error(request, f"A project with the name '{name}' already exists.")
+                return redirect('dashboard')
+                
+            # Get the team and department
+            team = Team.objects.get(id=team_id)
+            department = Department.objects.get(id=department_id)
             
-            # Get the project
-            project = Project.objects.get(id=project_id)
+            # Get user role to determine auto-approval
+            from register.models import UserProfile
+            profile = UserProfile.objects.get(user=request.user)
             
-            # Create the improvement suggestion
-            ProjectImprovement.objects.create(
-                project=project,
-                user=request.user,
-                suggestion=suggestion
+            # Create new project - admins' projects are auto-approved
+            project = Project.objects.create(
+                name=name,
+                description=description,
+                created_by=request.user,
+                team=team,
+                department=department,
+                start_date=start_date,
+                end_date=end_date if end_date else None,
+                status=status,
+                health=health,
+                is_approved=False  # All projects require approval by default
             )
             
-            messages.success(request, f"Improvement suggestion for '{project.name}' added successfully!")
-        except Project.DoesNotExist:
-            messages.error(request, "Project not found. Please select a valid project.")
+            # Add current user as a member
+            project.members.add(request.user)
+            
+            messages.success(request, f"Project '{name}' created successfully and is pending admin approval.")
         except Exception as e:
-            messages.error(request, f"Error adding improvement suggestion: {str(e)}")
-    
-    return redirect('project_health')
-
-# Toggle implementation status of improvement suggestion - for admins and project managers
-@login_required
-def toggle_improvement(request, improvement_id):
-    if request.method == "POST":
-        try:
-            # Check if user is admin or project manager
-            is_manager = request.user.is_staff or Project.objects.filter(created_by=request.user).exists()
-            
-            if not is_manager:
-                return JsonResponse({'success': False, 'message': "Only project managers or admins can update improvement status."})
-            
-            # Get the improvement
-            improvement = get_object_or_404(ProjectImprovement, id=improvement_id)
-            
-            # Toggle implementation status
-            improvement.is_implemented = not improvement.is_implemented
-            improvement.save()
-            
-            return JsonResponse({
-                'success': True, 
-                'is_implemented': improvement.is_implemented
-            })
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': str(e)})
-    
-    return JsonResponse({'success': False, 'message': "Invalid request method."})
+            messages.error(request, f"Error creating project: {str(e)}")
+        
+    return redirect('dashboard')
 
 # Add admin dashboard view - protected route
 @login_required
+@admin_required
 def admin_dashboard(request):
+    # Get all users
+    users = User.objects.all()
+    
+    # Get user profiles
+    from register.models import UserProfile, Company
+    user_profiles = UserProfile.objects.select_related('user', 'company').all()
+    
+    # Get pending employee approvals for companies where this admin is the creator
+    admin_companies = Company.objects.filter(created_by=request.user)
+    pending_approvals = UserProfile.objects.filter(
+        company__in=admin_companies,
+        is_approved=False
+    ).exclude(user=request.user).select_related('user', 'company').order_by('company__name')
+    
+    # Count of pending approvals
+    pending_count = pending_approvals.count()
+    
+    # Get projects data
+    projects = Project.objects.select_related('created_by', 'team', 'department').all()
+    
+    # Get pending project approvals
+    company_employees = UserProfile.objects.filter(company__in=admin_companies).values_list('user_id', flat=True)
+    pending_projects = Project.objects.filter(
+        created_by_id__in=company_employees,
+        is_approved=False
+    ).select_related('created_by', 'team', 'department').order_by('-created_at')
+    
+    # Count of pending project approvals
+    pending_projects_count = pending_projects.count()
+    
+    # Get stats
+    total_users = User.objects.count()
+    total_projects = Project.objects.count()
+    active_projects = Project.objects.filter(status='active').count()
+    
     context = {
         'username': request.user.username,
-        'user': request.user
+        'user': request.user,
+        'users': users,
+        'user_profiles': user_profiles,
+        'projects': projects,
+        'total_users': total_users,
+        'total_projects': total_projects,
+        'active_projects': active_projects,
+        'pending_approvals': pending_approvals,
+        'pending_count': pending_count,
+        'pending_projects': pending_projects,
+        'pending_projects_count': pending_projects_count,
     }
     return render(request, "main/admin_dashboard.html", context)
+
+# Add admin projects view - protected route
+@login_required
+@admin_required
+def admin_projects(request):
+    # Get all projects with related data
+    projects = Project.objects.select_related('created_by', 'team', 'department').all().order_by('-created_at')
+    
+    # Get user profiles for team assignments
+    from register.models import UserProfile
+    user_profiles = UserProfile.objects.exclude(role='admin').select_related('user').all()
+    
+    # Get existing comments
+    from .models import ProjectComment
+    comments = ProjectComment.objects.select_related('project', 'user').all().order_by('-created_at')
+    
+    # Handle comment form submission
+    if request.method == "POST":
+        action = request.POST.get('action')
+        
+        if action == 'add_comment':
+            project_id = request.POST.get('project_id')
+            comment_text = request.POST.get('comment_text')
+            
+            if project_id and comment_text:
+                try:
+                    project = Project.objects.get(id=project_id)
+                    
+                    # Create new comment
+                    ProjectComment.objects.create(
+                        project=project,
+                        user=request.user,
+                        text=comment_text
+                    )
+                    
+                    messages.success(request, "Comment added successfully!")
+                except Project.DoesNotExist:
+                    messages.error(request, "Project not found.")
+                except Exception as e:
+                    messages.error(request, f"Error adding comment: {str(e)}")
+        
+        # Redirect to avoid form resubmission
+        return redirect('admin_projects')
+    
+    context = {
+        'username': request.user.username,
+        'user': request.user,
+        'projects': projects,
+        'user_profiles': user_profiles,
+        'comments': comments,
+    }
+    return render(request, "main/admin_projects.html", context)
+
+# API endpoint to get project comments
+@login_required
+def get_project_comments(request, project_id):
+    try:
+        # Get the project
+        project = Project.objects.get(id=project_id)
+        
+        # Check if user has access to this project
+        if request.user.profile.role != 'admin' and request.user not in project.members.all():
+            return JsonResponse({"error": "You don't have permission to view these comments"}, status=403)
+        
+        # Get comments for the project
+        comments = ProjectComment.objects.filter(project=project).order_by('-created_at')
+        
+        # Format comments for JSON response
+        comment_list = []
+        for comment in comments:
+            comment_list.append({
+                'id': comment.id,
+                'author': comment.user.username,
+                'text': comment.text,
+                'date': comment.created_at.strftime('%b %d, %Y %H:%M')
+            })
+        
+        return JsonResponse({"comments": comment_list})
+    
+    except Project.DoesNotExist:
+        return JsonResponse({"error": "Project not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+# Add mark_comment_read view to handle AJAX requests
+@login_required
+def mark_comment_read(request, comment_id):
+    if request.method == "POST":
+        try:
+            comment = ProjectComment.objects.get(id=comment_id)
+            
+            # Check if user is part of the project
+            if request.user in comment.project.members.all():
+                # Add user to read_by relationship
+                comment.read_by.add(request.user)
+                return JsonResponse({"success": True})
+            else:
+                return JsonResponse({"success": False, "error": "User not part of this project"}, status=403)
+        except ProjectComment.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Comment not found"}, status=404)
+    return JsonResponse({"success": False, "error": "Invalid request method"}, status=400)
+
+# Add view to approve an employee
+@login_required
+@admin_required
+def approve_employee(request, user_id):
+    if request.method == "POST":
+        try:
+            profile = UserProfile.objects.get(user_id=user_id)
+            
+            # Verify the admin is from the same company
+            admin_companies = Company.objects.filter(created_by=request.user)
+            if profile.company not in admin_companies:
+                messages.error(request, "You can only approve employees from your own company.")
+                return redirect('admin_dashboard')
+            
+            # Update approval status
+            profile.is_approved = True
+            profile.save()
+            
+            messages.success(request, f"User {profile.user.username} has been approved.")
+        except UserProfile.DoesNotExist:
+            messages.error(request, "User profile not found.")
+        except Exception as e:
+            messages.error(request, f"Error approving user: {str(e)}")
+            
+    return redirect('admin_dashboard')
+
+# Add view to reject an employee
+@login_required
+@admin_required
+def reject_employee(request, user_id):
+    if request.method == "POST":
+        try:
+            profile = UserProfile.objects.get(user_id=user_id)
+            
+            # Verify the admin is from the same company
+            admin_companies = Company.objects.filter(created_by=request.user)
+            if profile.company not in admin_companies:
+                messages.error(request, "You can only reject employees from your own company.")
+                return redirect('admin_dashboard')
+            
+            # Get the user to delete
+            user = profile.user
+            
+            # Delete the user (this will cascade to the profile)
+            user.delete()
+            
+            messages.success(request, f"User {user.username} has been rejected and removed.")
+        except UserProfile.DoesNotExist:
+            messages.error(request, "User profile not found.")
+        except Exception as e:
+            messages.error(request, f"Error rejecting user: {str(e)}")
+            
+    return redirect('admin_dashboard')
+
+# Add view to approve a project
+@login_required
+@admin_required
+def approve_project(request, project_id):
+    if request.method == "POST":
+        try:
+            project = Project.objects.get(id=project_id)
+            
+            # Check if the admin is part of the same company
+            admin_companies = Company.objects.filter(created_by=request.user)
+            creator_profile = UserProfile.objects.get(user=project.created_by)
+            
+            if creator_profile.company not in admin_companies:
+                messages.error(request, "You can only approve projects from your own company.")
+                return redirect('admin_dashboard')
+                
+            # Update approval status
+            project.is_approved = True
+            project.save()
+            
+            # Create a project comment to notify the team
+            ProjectComment.objects.create(
+                project=project,
+                user=request.user,
+                text=f"Project has been approved by {request.user.username}."
+            )
+            
+            messages.success(request, f"Project '{project.name}' has been approved.")
+        except Project.DoesNotExist:
+            messages.error(request, "Project not found.")
+        except Exception as e:
+            messages.error(request, f"Error approving project: {str(e)}")
+    
+    return redirect('admin_dashboard')
+
+# Add view to reject a project
+@login_required
+@admin_required
+def reject_project(request, project_id):
+    if request.method == "POST":
+        try:
+            project = Project.objects.get(id=project_id)
+            
+            # Check if the admin is part of the same company
+            admin_companies = Company.objects.filter(created_by=request.user)
+            creator_profile = UserProfile.objects.get(user=project.created_by)
+            
+            if creator_profile.company not in admin_companies:
+                messages.error(request, "You can only reject projects from your own company.")
+                return redirect('admin_dashboard')
+            
+            # Store project name for the success message
+            project_name = project.name
+            project_creator = project.created_by
+            
+            # Delete the project
+            project.delete()
+            
+            # Notify via messaging system (if implemented)
+            # For now, we'll just show a message to the admin
+            messages.success(request, f"Project '{project_name}' has been rejected and removed.")
+            
+            # In a real app, you might want to send an email notification to the creator
+            
+        except Project.DoesNotExist:
+            messages.error(request, "Project not found.")
+        except Exception as e:
+            messages.error(request, f"Error rejecting project: {str(e)}")
+    
+    return redirect('admin_dashboard')
+
+# Add view to delete a user
+@login_required
+@admin_required
+def delete_user(request, user_id):
+    if request.method == "POST":
+        try:
+            # Get the user to delete
+            user_to_delete = User.objects.get(id=user_id)
+            profile_to_delete = UserProfile.objects.get(user=user_to_delete)
+            
+            # Verify the admin is from the same company
+            admin_companies = Company.objects.filter(created_by=request.user)
+            if profile_to_delete.company not in admin_companies:
+                messages.error(request, "You can only remove users from your own company.")
+                return redirect('admin_dashboard')
+            
+            # Store user info for the success message
+            username = user_to_delete.username
+            
+            # Delete the user (this will cascade to the profile)
+            user_to_delete.delete()
+            
+            messages.success(request, f"User {username} has been removed from the team.")
+            
+        except User.DoesNotExist:
+            messages.error(request, "User not found.")
+        except UserProfile.DoesNotExist:
+            messages.error(request, "User profile not found.")
+        except Exception as e:
+            messages.error(request, f"Error removing user: {str(e)}")
+            
+    return redirect('admin_dashboard')
 
 
 

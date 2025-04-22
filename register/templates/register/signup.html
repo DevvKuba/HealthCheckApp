@@ -35,14 +35,14 @@
             width: 100%;
             max-width: 300px;
             margin-bottom: 15px;
-            position: relative;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
+            background-color: white;
         }
         .btn-primary {
             background-color: #0096FF;
@@ -61,156 +61,99 @@
             text-decoration: none;
             color: #0096FF;
         }
-        .messages {
-            width: 100%;
-            max-width: 300px;
-            margin-bottom: 15px;
-            list-style-type: none;
-            padding: 0;
-        }
-        .messages li {
-            padding: 10px;
-            margin-bottom: 5px;
-            border-radius: 4px;
-        }
-        .messages .error {
-            background-color: #ffebee;
-            color: #c62828;
-        }
-        .messages .info {
-            background-color: #e3f2fd;
-            color: #0d47a1;
-        }
-        .messages .success {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-        }
-        .error-feedback {
-            color: #c62828;
+        .helptext {
             font-size: 12px;
-            margin-top: 5px;
-        }
-        .help-text {
-            font-size: 12px;
-            color: #666;
-            margin-top: 4px;
-        }
-        .password-toggle {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #666;
-        }
-        .name-fields {
-            display: flex;
-            gap: 10px;
-        }
-        .name-field {
-            flex: 1;
-        }
-        .field-title {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 5px;
+            color: #777;
             display: block;
+            margin-top: 2px;
+        }
+        .errorlist {
+            color: red;
+            font-size: 12px;
+            padding-left: 20px;
+            margin: 5px 0;
+        }
+        .hidden {
+            display: none;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="auth-form">
         <h2>Sign Up</h2>
-
+        
         {% if messages %}
-        <ul class="messages">
+        <div class="error-message">
             {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {{ message }}
             {% endfor %}
-        </ul>
+        </div>
         {% endif %}
         
-        <form method="post">
+        <form method="POST">
             {% csrf_token %}
             
             <div class="form-group">
-                <span class="field-title">Username</span>
                 <input type="text" name="username" placeholder="Username" required>
-                {% if form.username.errors %}
-                <div class="error-feedback">
-                    {% for error in form.username.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-                {% endif %}
-                <div class="help-text">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</div>
-            </div>
-            
-            <div class="name-fields">
-                <div class="form-group name-field">
-                    <span class="field-title">First Name</span>
-                    <input type="text" name="first_name" placeholder="First Name">
-                    {% if form.first_name.errors %}
-                    <div class="error-feedback">
-                        {% for error in form.first_name.errors %}
-                        {{ error }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-                
-                <div class="form-group name-field">
-                    <span class="field-title">Last Name</span>
-                    <input type="text" name="last_name" placeholder="Last Name">
-                    {% if form.last_name.errors %}
-                    <div class="error-feedback">
-                        {% for error in form.last_name.errors %}
-                        {{ error }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
+                {{ form.username.errors }}
             </div>
             
             <div class="form-group">
-                <span class="field-title">Email</span>
+                <input type="text" name="first_name" placeholder="First Name">
+                {{ form.first_name.errors }}
+            </div>
+            
+            <div class="form-group">
+                <input type="text" name="last_name" placeholder="Last Name">
+                {{ form.last_name.errors }}
+            </div>
+            
+            <div class="form-group">
                 <input type="email" name="email" placeholder="Email" required>
-                {% if form.email.errors %}
-                <div class="error-feedback">
-                    {% for error in form.email.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-                {% endif %}
+                {{ form.email.errors }}
             </div>
             
             <div class="form-group">
-                <span class="field-title">Password</span>
-                <input type="password" name="password1" id="password1" placeholder="Password" required>
-                <button type="button" class="password-toggle" id="password1-toggle">👁️</button>
-                {% if form.password1.errors %}
-                <div class="error-feedback">
-                    {% for error in form.password1.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-                {% endif %}
-                <div class="help-text">Password must be at least 8 characters long, contain letters and numbers.</div>
+                <input type="password" name="password1" placeholder="Password" required>
+                {{ form.password1.errors }}
             </div>
             
             <div class="form-group">
-                <span class="field-title">Confirm Password</span>
-                <input type="password" name="password2" id="password2" placeholder="Confirm Password" required>
-                <button type="button" class="password-toggle" id="password2-toggle">👁️</button>
-                {% if form.password2.errors %}
-                <div class="error-feedback">
-                    {% for error in form.password2.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </div>
-                {% endif %}
+                <input type="password" name="password2" placeholder="Confirm Password" required>
+                {{ form.password2.errors }}
+            </div>
+            
+            <div class="form-group">
+                <input type="date" name="date_of_birth" required>
+                {{ form.date_of_birth.errors }}
+            </div>
+            
+            <div class="form-group">
+                <select name="role" id="role-select" required>
+                    <option value="" disabled selected>Select Your Role</option>
+                    <option value="admin">Project Admin</option>
+                    <option value="employee">Project Employee</option>
+                    <option value="manager">Project Manager</option>
+                    <option value="client">Client</option>
+                </select>
+                {{ form.role.errors }}
+            </div>
+            
+            <div class="form-group">
+                <input type="text" name="company_name" id="company-name" placeholder="Company Name">
+                {{ form.company_name.errors }}
+            </div>
+            
+            <div class="form-group hidden" id="company-code-group">
+                <input type="text" name="company_code" id="company-code" placeholder="Company Access Code">
+                <span class="helptext">Required for Project Manager and Employee roles</span>
+                {{ form.company_code.errors }}
             </div>
             
             <div class="form-group">
@@ -224,37 +167,31 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Password visibility toggle for password1
-            const password1Toggle = document.getElementById('password1-toggle');
-            const password1Field = document.getElementById('password1');
+            const roleSelect = document.getElementById('role-select');
+            const companyCodeGroup = document.getElementById('company-code-group');
+            const companyNameInput = document.getElementById('company-name');
             
-            if (password1Toggle && password1Field) {
-                password1Toggle.addEventListener('click', function() {
-                    if (password1Field.type === 'password') {
-                        password1Field.type = 'text';
-                        password1Toggle.textContent = '🙈';
-                    } else {
-                        password1Field.type = 'password';
-                        password1Toggle.textContent = '👁️';
+            function updateFieldVisibility() {
+                const selectedRole = roleSelect.value;
+                
+                // Show company code field for employee and manager roles
+                if (selectedRole === 'employee' || selectedRole === 'manager') {
+                    companyCodeGroup.classList.remove('hidden');
+                    companyNameInput.setAttribute('required', 'required');
+                } else {
+                    companyCodeGroup.classList.add('hidden');
+                    // Company name is optional for admin but not required
+                    if (selectedRole !== 'admin') {
+                        companyNameInput.removeAttribute('required');
                     }
-                });
+                }
             }
             
-            // Password visibility toggle for password2
-            const password2Toggle = document.getElementById('password2-toggle');
-            const password2Field = document.getElementById('password2');
+            // Initial check
+            updateFieldVisibility();
             
-            if (password2Toggle && password2Field) {
-                password2Toggle.addEventListener('click', function() {
-                    if (password2Field.type === 'password') {
-                        password2Field.type = 'text';
-                        password2Toggle.textContent = '🙈';
-                    } else {
-                        password2Field.type = 'password';
-                        password2Toggle.textContent = '👁️';
-                    }
-                });
-            }
+            // Listen for changes on the role select
+            roleSelect.addEventListener('change', updateFieldVisibility);
         });
     </script>
 </body>
